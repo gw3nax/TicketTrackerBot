@@ -1,0 +1,93 @@
+openapi: 3.0.0
+info:
+  title: TicketTrackerBot
+  description: Bot для получения данных об авиабилетах
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local server
+paths:
+  /search/routes:
+    post:
+      summary: Поиск по направлению
+      description: Отправляет запрос на внешний сервис для поиска авиабилетов
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchTicketsRequest'
+      responses:
+        '200':
+          description: Успешный ответ с результатами поиска
+        '400':
+          description: Некорректные параметры запроса
+        '500':
+          description: Ошибка работы сервера
+
+components:
+  schemas:
+    SearchTicketsRequest:
+      type: object
+      properties:
+        flight_routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlightRoute'
+      example:
+        flight_routes:
+          - total_time_spent: 232344055
+            currency: RUB
+            cost: 9955.90
+            flights:
+              - from_date: 2024-10-10 12:00
+                to_date: 2024-10-10 15:45
+                from_place: VVO
+                to_place: OVB
+              - from_date: 2024-10-10 17:00
+                to_date: 2024-10-10 21:15
+                from_place: OVB
+                to_place: LED
+          - total_time_spent: 232344055
+            currency: RUB
+            cost: 15450.90
+            flights:
+              - from_date: 2024-10-10 7:40
+                to_date: 2024-10-10 14:55
+                from_place: VVO
+                to_place: LED
+    FlightRoute:
+      type: object
+      properties:
+        total_time_spent:
+          type: integer
+          format: long
+        currency:
+          type: string
+        cost:
+          type: number
+          format: double
+        flights:
+          type: array
+          items:
+            $ref: '#/components/schemas/Flight'
+    Flight:
+      type: object
+      properties:
+        link:
+          type: string
+          description: Ссылка на билет
+        from_date:
+          type: string
+          description: Дата начала окна перелета
+          format: date-time
+        to_date:
+          type: string
+          description: Дата окончания окна перелета
+          format: date-time
+        from_place:
+          type: string
+          description: Аэропорт вылета
+        to_place:
+          type: string
+          description: Аэропорт прибытия
