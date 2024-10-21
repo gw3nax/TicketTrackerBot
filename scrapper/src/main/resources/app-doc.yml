@@ -42,7 +42,31 @@ paths:
         '500':
           description: Ошибка работы сервера
 
-
+  /tickets/{userId}:
+    get:
+      summary: Получить авиабилеты по требованию
+      description: Возвращает список авиабилетов для указанного пользователя
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ со списком авиабилетов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlightResponse'
+        '404':
+          description: Билеты не найдены для указанного пользователя
+        '500':
+          description: Ошибка сервера
 
 components:
   schemas:
@@ -78,3 +102,37 @@ components:
         currency: RUB
         cost: 20000.0
 
+    FlightResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        currency:
+          type: string
+        price:
+          type: number
+          format: double
+        flights:
+          type: array
+          items:
+            $ref: '#/components/schemas/Flight'
+
+    Flight:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fromPlace:
+          type: string
+        toPlace:
+          type: string
+        fromDate:
+          type: string
+          format: date
+        toDate:
+          type: string
+          format: date
+        link:
+          type: string
