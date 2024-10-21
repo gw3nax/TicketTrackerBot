@@ -1,15 +1,15 @@
 openapi: 3.0.0
 info:
-  title: TicketTrackerBot
+  title: Scrapper
   description: Bot для получения данных об авиабилетах
   version: 1.0.0
 servers:
   - url: http://localhost:8080
     description: Local server
 paths:
-  /search/routes:
+  /search_queries:
     post:
-      summary: Поиск по направлению
+      summary: Добавить поисковой запрос в очередь
       description: Отправляет запрос на внешний сервис для поиска авиабилетов
       requestBody:
         required: true
@@ -25,14 +25,30 @@ paths:
         '500':
           description: Ошибка работы сервера
 
+  /search_queries/{chatId}:
+    delete:
+      summary: Убрать запрос из очереди
+      description: Убирает запрос из очереди запросов
+      parameters:
+        - name: chatId
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Удаление запроса произошло успешно
+        '400':
+          description: Некорректные параметры запроса
+        '500':
+          description: Ошибка работы сервера
+
+
+
 components:
   schemas:
     SearchTicketsRequest:
       type: object
       properties:
-        currency:
-          type: string
-          description: Код валюты
         from_date:
           type: string
           description: Дата начала окна перелета
@@ -47,7 +63,10 @@ components:
         to_place:
           type: string
           description: Пункт назначения
-        cost:
+        currency:
+          type: string
+          description: Код валюты
+        price:
           type: number
           format: double
           description: Предполагаемая стоимость билетов

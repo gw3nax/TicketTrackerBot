@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: scrapper
+  jackson:
+    time-zone: UTC
+  datasource:
+    url: jdbc:postgresql://localhost:5433/scrapper
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: migrations/db.changelog-master.yml
+server:
+  port: 8090

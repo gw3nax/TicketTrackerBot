@@ -7,7 +7,7 @@ servers:
   - url: http://localhost:8080
     description: Local server
 paths:
-  /search/routes:
+  /search_queries/updates:
     post:
       summary: Поиск по направлению
       description: Отправляет запрос на внешний сервис для поиска авиабилетов
