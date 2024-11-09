@@ -1,6 +1,6 @@
 CREATE TABLE flights
 (
-    id                 BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id                 SERIAL PRIMARY KEY,
     flight_response_id BIGINT       NOT NULL,
     from_place         VARCHAR(255) NOT NULL,
     to_place           VARCHAR(255) NOT NULL,
@@ -9,4 +9,3 @@ CREATE TABLE flights
     link               TEXT,
     CONSTRAINT fk_flights_flight_response FOREIGN KEY (flight_response_id) REFERENCES flight_responses (id) ON DELETE CASCADE
 );
-

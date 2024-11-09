@@ -1,3 +1,3 @@
 CREATE TABLE users (
-    chat_id BIGINT PRIMARY KEY
+                       chat_id BIGINT PRIMARY KEY
 );

@@ -1,3 +1,4 @@
+
 openapi: 3.0.0
 info:
   title: Scrapper
@@ -7,7 +8,7 @@ servers:
   - url: http://localhost:8080
     description: Local server
 paths:
-  /search_queries:
+  /tickets/search_query:
     post:
       summary: Добавить поисковой запрос в очередь
       description: Отправляет запрос на внешний сервис для поиска авиабилетов
@@ -25,13 +26,14 @@ paths:
         '500':
           description: Ошибка работы сервера
 
-  /search_queries/{chatId}:
+  /tickets/search_query/{chatId}:
     delete:
       summary: Убрать запрос из очереди
       description: Убирает запрос из очереди запросов
       parameters:
         - name: chatId
           in: path
+          required: true
           schema:
             type: number
       responses:
@@ -42,12 +44,12 @@ paths:
         '500':
           description: Ошибка работы сервера
 
-  /tickets/{userId}:
+  /tickets/{chatId}:
     get:
       summary: Получить авиабилеты по требованию
       description: Возвращает список авиабилетов для указанного пользователя
       parameters:
-        - name: userId
+        - name: chatId
           in: path
           required: true
           description: Идентификатор пользователя

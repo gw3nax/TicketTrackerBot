@@ -1,13 +1,15 @@
 package ru.gw3nax.scrapper.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
+
 
 @Entity
 @AllArgsConstructor
@@ -24,11 +26,8 @@ public class FlightResponse {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id")
     User user;
-
     String currency;
-
-    Double price;
-
+    BigDecimal price;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Flight> flights;
 }
