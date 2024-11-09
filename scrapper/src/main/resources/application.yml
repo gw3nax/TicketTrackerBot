@@ -1,0 +1,26 @@
+app:
+  scheduler:
+    enable: true
+    interval: 15s
+  botBaseUrl: http://localhost:8090/
+  aviasalesBaseUrl: https://api.travelpayouts.com/aviasales/v3/grouped_prices
+  aviasalesApiKey: ${AVIASALES_TOKEN}
+
+spring:
+  application:
+    name: scrapper
+  jackson:
+    time-zone: UTC
+  datasource:
+    url: jdbc:postgresql://localhost:5433/scrapper
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: migrations/db.changelog-master.yml
+
+server:
+  port: 8090

@@ -1,15 +1,15 @@
 openapi: 3.0.0
 info:
-  title: TicketTrackerBot
+  title: Scrapper
   description: Bot для получения данных об авиабилетах
   version: 1.0.0
 servers:
   - url: http://localhost:8080
     description: Local server
 paths:
-  /search/routes:
+  /tickets/search_query:
     post:
-      summary: Поиск по направлению
+      summary: Добавить поисковой запрос в очередь
       description: Отправляет запрос на внешний сервис для поиска авиабилетов
       requestBody:
         required: true
@@ -25,14 +25,55 @@ paths:
         '500':
           description: Ошибка работы сервера
 
+  /tickets/search_query/{chatId}:
+    delete:
+      summary: Убрать запрос из очереди
+      description: Убирает запрос из очереди запросов
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Удаление запроса произошло успешно
+        '400':
+          description: Некорректные параметры запроса
+        '500':
+          description: Ошибка работы сервера
+
+  /tickets/{chatId}:
+    get:
+      summary: Получить авиабилеты по требованию
+      description: Возвращает список авиабилетов для указанного пользователя
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ со списком авиабилетов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlightResponse'
+        '404':
+          description: Билеты не найдены для указанного пользователя
+        '500':
+          description: Ошибка сервера
+
 components:
   schemas:
     SearchTicketsRequest:
       type: object
       properties:
-        currency:
-          type: string
-          description: Код валюты
         from_date:
           type: string
           description: Дата начала окна перелета
@@ -47,7 +88,10 @@ components:
         to_place:
           type: string
           description: Пункт назначения
-        cost:
+        currency:
+          type: string
+          description: Код валюты
+        price:
           type: number
           format: double
           description: Предполагаемая стоимость билетов
@@ -59,3 +103,37 @@ components:
         currency: RUB
         cost: 20000.0
 
+    FlightResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        currency:
+          type: string
+        price:
+          type: number
+          format: double
+        flights:
+          type: array
+          items:
+            $ref: '#/components/schemas/Flight'
+
+    Flight:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fromPlace:
+          type: string
+        toPlace:
+          type: string
+        fromDate:
+          type: string
+          format: date
+        toDate:
+          type: string
+          format: date
+        link:
+          type: string
