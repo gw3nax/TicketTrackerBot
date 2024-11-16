@@ -1,10 +1,21 @@
 app:
+  aviasalesBaseUrl: https://api.travelpayouts.com/aviasales/v3/grouped_prices
+  aviasalesApiKey: ${AVIASALES_TOKEN}
   scheduler:
     enable: true
     interval: 15s
-  botBaseUrl: http://localhost:8090/
-  aviasalesBaseUrl: https://api.travelpayouts.com/aviasales/v3/grouped_prices
-  aviasalesApiKey: ${AVIASALES_TOKEN}
+  botBaseUrl: http://localhost:8080/
+
+kafka:
+  acks: all
+  batch-size: 512
+  max-request-size: 512
+  linger-ms: 5000
+  bootstrap-server:  127.0.0.1:9092
+  topic-prop:
+    name: main
+    partitions: 1
+    replicas: 1
 
 spring:
   application:

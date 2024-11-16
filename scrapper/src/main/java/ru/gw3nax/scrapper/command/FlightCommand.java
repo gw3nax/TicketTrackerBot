@@ -7,5 +7,5 @@ import ru.gw3nax.scrapper.entity.FlightQuery;
 import java.util.List;
 
 public interface FlightCommand {
-    Mono<List<BotFlightResponse>> execute(FlightQuery query);
+    List<BotFlightResponse> execute(FlightQuery query);
 }

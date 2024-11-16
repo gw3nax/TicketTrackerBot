@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
+import ru.gw3nax.scrapper.client.AviasalesClient;
 import ru.gw3nax.scrapper.dto.request.BotFlightResponse;
 import ru.gw3nax.scrapper.dto.response.AviasalesTicketsResponse;
 import ru.gw3nax.scrapper.entity.FlightQuery;
@@ -16,24 +17,15 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AviasalesService {
-    private final WebClient aviasalesWebClient;
+    private final AviasalesClient aviasalesClient;
     private final ConversionService conversionService;
 
-    public Mono<List<BotFlightResponse>> getTickets(FlightQuery query) {
-        return aviasalesWebClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("departure_at", query.getFromDate())
-                        .queryParam("origin", query.getFromPlace())
-                        .queryParam("destination", query.getToPlace())
-                        .queryParam("currency", query.getCurrency())
-                        .queryParam("token", "edcc47e0fe063c3c32423a34ed9dcb85")
-                        .build())
-                .retrieve()
-                .bodyToMono(AviasalesTicketsResponse.class)
-                .map(aviasalesTicketsResponse ->
-                        aviasalesTicketsResponse.getData().values().stream()
-                                .map(data -> conversionService.convert(data, BotFlightResponse.class))
-                                .collect(Collectors.toList())
-                );
+    public List<BotFlightResponse>getTickets(FlightQuery query) {
+        return aviasalesClient.getTickets(query)
+                .getData()
+                .values()
+                .stream()
+                .map(data -> conversionService.convert(data, BotFlightResponse.class))
+                .collect(Collectors.toList());
     }
 }

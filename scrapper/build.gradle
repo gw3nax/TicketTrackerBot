@@ -26,7 +26,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.3.5'
-    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+    implementation 'me.paulschwarz:spring-dotenv:3.0.0'
+    implementation 'org.springframework.kafka:spring-kafka:3.2.4'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 

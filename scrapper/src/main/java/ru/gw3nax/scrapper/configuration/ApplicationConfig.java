@@ -11,9 +11,7 @@ import java.time.Duration;
 @Validated
 @ConfigurationProperties(prefix = "app")
 public record ApplicationConfig(
-        @NotEmpty String aviasalesBaseUrl,
         @NotEmpty String botBaseUrl,
-        @NotEmpty String aviasalesApiKey,
         @NotNull
         @Bean
         Scheduler scheduler
