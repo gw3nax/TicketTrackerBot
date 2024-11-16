@@ -16,7 +16,7 @@ public class AviasalesFlightCommand implements FlightCommand {
     private final AviasalesService aviasalesService;
 
     @Override
-    public Mono<List<BotFlightResponse>> execute(FlightQuery query) {
+    public List<BotFlightResponse> execute(FlightQuery query) {
         return aviasalesService.getTickets(query);
     }
 }

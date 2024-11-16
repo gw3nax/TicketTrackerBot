@@ -32,16 +32,11 @@ public class FlightSearcher {
             List<BotFlightResponse> flightResponses = new ArrayList<>();
             //Каждый запрос кидает
             for (var flightCommand : flightCommands) {
-                flightResponses.addAll(Objects.requireNonNull(flightCommand.execute(flightQuery).block()));
+                flightResponses.addAll(Objects.requireNonNull(flightCommand.execute(flightQuery)));
             }
             List<BotFlightResponse> responses = flightProcessor.process(flightResponses);
 
-            botService.sendTicketSearchResult(BotFlightRequest.builder()
-                    .price(BigDecimal.ONE)
-                    .currency("RUB")
-                    .data(responses)
-                    .chatId(flightQuery.getUser().getChatId())
-                    .build());
+            botService.sendUpdate(responses.getFirst());
         }
     }
 }

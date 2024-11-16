@@ -1,29 +1,46 @@
 package ru.gw3nax.scrapper.client;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
-import ru.gw3nax.scrapper.configuration.ApplicationConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
+import ru.gw3nax.scrapper.dto.response.AviasalesTicketsResponse;
+import ru.gw3nax.scrapper.entity.FlightQuery;
 
-import java.util.Map;
-
-@Configuration
-public class AviasalesClient implements Client {
+@Component
+@Slf4j
+public class AviasalesClient {
 
     private final String BASE_URL;
     private final String API_KEY;
+    private final RestClient customClient;
 
-    AviasalesClient(ApplicationConfig config) {
-        BASE_URL = config.aviasalesBaseUrl();
-        API_KEY = config.aviasalesApiKey();
+    public AviasalesClient(
+            @Value("${app.aviasalesBaseUrl}") String baseUrl,
+            @Value("${app.aviasalesApiKey}") String apiKey) {
+        this.BASE_URL = baseUrl;
+        this.API_KEY = apiKey;
+
+        this.customClient = RestClient.builder()
+                .baseUrl(UriComponentsBuilder.fromHttpUrl(BASE_URL)
+                        .queryParam("token", API_KEY)
+                        .toUriString())
+                .build();
     }
 
-    @Override
-    @Bean("aviasalesWebClient")
-    public WebClient getWebClient() {
-        return WebClient.builder()
-                .baseUrl(BASE_URL)
-                .defaultUriVariables(Map.of("token", API_KEY))
-                .build();
+
+    public AviasalesTicketsResponse getTickets(FlightQuery query) {
+        var result = customClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("departure_at", query.getFromDate())
+                        .queryParam("origin", query.getFromPlace())
+                        .queryParam("destination", query.getToPlace())
+                        .queryParam("currency", query.getCurrency())
+                        .build())
+                .retrieve()
+                .body(AviasalesTicketsResponse.class);
+        log.info(result.toString());
+        return result;
     }
 }

@@ -2,24 +2,28 @@ package ru.gw3nax.scrapper.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.gw3nax.scrapper.dto.request.BotFlightRequest;
+import ru.gw3nax.scrapper.configuration.KafkaProperties;
+import ru.gw3nax.scrapper.dto.request.BotFlightResponse;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class BotService {
+    private final KafkaProperties kafkaProperties;
+    private final KafkaTemplate<String, BotFlightResponse> kafkaTemplate;
 
-    private final WebClient botWebClient;
+    public BotService(
+            KafkaProperties kafkaProperties,
+            KafkaTemplate<String, BotFlightResponse> kafkaTemplate
+    ) {
+        this.kafkaProperties = kafkaProperties;
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
-    public Mono<Void> sendTicketSearchResult(BotFlightRequest flightBotRequest) {
-        log.info("Sending search result: " + flightBotRequest);
-        return botWebClient.post()
-                .uri("")
-                .body(Mono.just(flightBotRequest), BotFlightRequest.class)
-                .retrieve()
-                .bodyToMono(Void.class);
+    public Mono<Void> sendUpdate(BotFlightResponse botFlightResponse) {
+        kafkaTemplate.send(kafkaProperties.topicProp().name(), botFlightResponse);
+        return Mono.empty();
     }
 }
