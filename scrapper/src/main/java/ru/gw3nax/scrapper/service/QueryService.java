@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gw3nax.scrapper.dto.request.FlightRequest;
 import ru.gw3nax.scrapper.entity.FlightQuery;
-import ru.gw3nax.scrapper.exception.exceptions.UserNotRegisteredException;
 import ru.gw3nax.scrapper.repository.FlightQueryRepository;
 
 @Service

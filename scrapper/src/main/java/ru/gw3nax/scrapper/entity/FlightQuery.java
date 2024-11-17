@@ -19,14 +19,14 @@ public class FlightQuery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String userId;
-    String fromPlace;
-    String toPlace;
-    LocalDate fromDate;
-    LocalDate toDate;
+    private Long id;
+    private String userId;
+    private String fromPlace;
+    private String toPlace;
+    private LocalDate fromDate;
+    private LocalDate toDate;
 
-    String currency;
+    private String currency;
 
-    BigDecimal price;
+    private BigDecimal price;
 }

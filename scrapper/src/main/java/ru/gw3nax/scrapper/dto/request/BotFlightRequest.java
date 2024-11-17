@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class BotFlightRequest {
-    String userId;
-    String currency;
-    BigDecimal price;
-    List<BotFlightData> data;
+    private String userId;
+    private String currency;
+    private BigDecimal price;
+    private List<BotFlightData> data;
 }
