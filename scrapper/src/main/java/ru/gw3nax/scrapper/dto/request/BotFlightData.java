@@ -12,9 +12,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BotFlightData {
-    String fromPlace;
-    String toPlace;
-    LocalDate fromDate;
-    LocalDate toDate;
-    String link;
+    private String fromPlace;
+    private String toPlace;
+    private LocalDate fromDate;
+    private LocalDate toDate;
+    private String link;
 }

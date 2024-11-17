@@ -12,7 +12,6 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.gw3nax.scrapper.dto.request.BotFlightData;
 import ru.gw3nax.scrapper.dto.request.BotFlightRequest;
 
 import java.util.HashMap;
