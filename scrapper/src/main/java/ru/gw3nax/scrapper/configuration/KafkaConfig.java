@@ -5,7 +5,6 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -13,7 +12,8 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.gw3nax.scrapper.dto.request.BotFlightResponse;
+import ru.gw3nax.scrapper.dto.request.BotFlightData;
+import ru.gw3nax.scrapper.dto.request.BotFlightRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public DefaultKafkaProducerFactory<String, BotFlightResponse> kafkaProducerFactory() {
+    public DefaultKafkaProducerFactory<String, BotFlightRequest> kafkaProducerFactory() {
         Map<String, Object> prop = new HashMap<>();
 
         prop.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.bootstrapServer());
@@ -55,8 +55,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, BotFlightResponse>
-    kafkaTemplate(DefaultKafkaProducerFactory<String, BotFlightResponse> kafkaProducerFactory) {
+    public KafkaTemplate<String, BotFlightRequest> kafkaTemplate(DefaultKafkaProducerFactory<String, BotFlightRequest> kafkaProducerFactory) {
         return new KafkaTemplate<>(kafkaProducerFactory);
     }
 

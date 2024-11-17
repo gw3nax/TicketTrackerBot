@@ -20,10 +20,7 @@ public class FlightQuery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_id")
-    User user;
+    String userId;
     String fromPlace;
     String toPlace;
     LocalDate fromDate;

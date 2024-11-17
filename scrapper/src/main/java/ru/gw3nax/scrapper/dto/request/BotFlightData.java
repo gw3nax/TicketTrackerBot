@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BotFlightResponse {
+public class BotFlightData {
     String fromPlace;
     String toPlace;
     LocalDate fromDate;

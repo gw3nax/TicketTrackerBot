@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class BotFlightRequest {
-    Long chatId;
+    String userId;
     String currency;
     BigDecimal price;
-    List<BotFlightResponse> data;
+    List<BotFlightData> data;
 }
