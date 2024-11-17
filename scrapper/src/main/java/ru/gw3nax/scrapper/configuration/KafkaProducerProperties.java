@@ -3,12 +3,11 @@ package ru.gw3nax.scrapper.configuration;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@ConfigurationProperties(prefix = "kafka")
-public record KafkaProperties(
+@ConfigurationProperties(prefix = "kafka-producer")
+public record KafkaProducerProperties(
         @NotNull
         Integer batchSize,
         @NotNull
@@ -17,7 +16,6 @@ public record KafkaProperties(
         Long lingerMs,
         @NotEmpty
         String acks,
-        @Bean
         TopicProp topicProp,
         @NotNull
         String bootstrapServer

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -14,7 +15,8 @@ import java.time.LocalDate;
 public class BotFlightData {
     private String fromPlace;
     private String toPlace;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private LocalDate departureAt;
+    private BigDecimal price;
+    private String airline;
     private String link;
 }

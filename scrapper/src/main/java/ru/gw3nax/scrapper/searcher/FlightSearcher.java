@@ -27,21 +27,16 @@ public class FlightSearcher {
 
     public void search() {
         List<FlightQuery> flightQueries = flightQueryRepository.findAll();
-        //Проходится по всем запросам
         for (var flightQuery : flightQueries) {
             List<BotFlightData> flightResponses = new ArrayList<>();
-            //Каждый запрос кидает
             for (var flightCommand : flightCommands) {
                 flightResponses.addAll(Objects.requireNonNull(flightCommand.execute(flightQuery)));
             }
             List<BotFlightData> responses = flightProcessor.process(flightResponses);
 
-            //TODO: edit request
             botService.sendUpdate(BotFlightRequest.builder()
                     .data(responses)
                     .userId(flightQuery.getUserId())
-                    .price(BigDecimal.ONE)
-                    .currency("RUB")
                     .build());
         }
     }

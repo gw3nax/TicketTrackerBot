@@ -13,7 +13,9 @@ public interface AviasalesToBotFlightMapper extends Converter<AviasalesResponseD
     @Override
     @Mapping(source = "origin", target = "fromPlace")
     @Mapping(source = "destination", target = "toPlace")
-    @Mapping(source = "departureAt", target = "fromDate")
+    @Mapping(source = "departureAt", target = "departureAt")
     @Mapping(source = "link", target = "link")
+    @Mapping(source = "price", target = "price")
+    @Mapping(source = "airline", target = "airline")
     BotFlightData convert(AviasalesResponseData aviasalesResponseData);
 }

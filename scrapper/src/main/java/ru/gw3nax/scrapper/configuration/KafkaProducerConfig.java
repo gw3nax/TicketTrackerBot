@@ -20,9 +20,9 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 @RequiredArgsConstructor
-public class KafkaConfig {
+public class KafkaProducerConfig {
 
-    private final KafkaProperties kafkaProperties;
+    private final KafkaProducerProperties kafkaProperties;
 
     @Bean
     public NewTopic newTopic() {
