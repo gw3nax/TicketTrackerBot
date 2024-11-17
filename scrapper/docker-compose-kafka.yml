@@ -1,5 +1,15 @@
 version: '2'
 services:
+  db1:
+    image: postgres
+    hostname: db1
+    container_name: db1
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: scrapper
   zoo1:
     image: confluentinc/cp-zookeeper:7.3.2
     hostname: zoo1

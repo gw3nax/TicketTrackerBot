@@ -14,7 +14,5 @@ import java.util.List;
 @Builder
 public class BotFlightRequest {
     private String userId;
-    private String currency;
-    private BigDecimal price;
     private List<BotFlightData> data;
 }
