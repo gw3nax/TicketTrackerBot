@@ -8,8 +8,8 @@ app:
 
 kafka:
   acks: all
-  batch-size: 512
-  max-request-size: 512
+  batch-size: 1024
+  max-request-size: 1024
   linger-ms: 5000
   bootstrap-server:  127.0.0.1:9092
   topic-prop:

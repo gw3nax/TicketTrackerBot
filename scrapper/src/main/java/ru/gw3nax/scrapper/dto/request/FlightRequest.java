@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class FlightRequest {
-    Long chatId;
+    String userId;
     String fromPlace;
     String toPlace;
     LocalDate fromDate;
