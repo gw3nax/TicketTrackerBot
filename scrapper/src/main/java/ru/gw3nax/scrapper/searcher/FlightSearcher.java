@@ -32,12 +32,13 @@ public class FlightSearcher {
             for (var flightCommand : flightCommands) {
                 flightResponses.addAll(Objects.requireNonNull(flightCommand.execute(flightQuery)));
             }
-            List<BotFlightData> responses = flightProcessor.process(flightResponses);
-
-            botService.sendUpdate(BotFlightRequest.builder()
-                    .data(responses)
-                    .userId(flightQuery.getUserId())
-                    .build());
+            List<BotFlightData> responses = flightProcessor.process(flightResponses, flightQuery);
+            if (!responses.isEmpty()) {
+                botService.sendUpdate(BotFlightRequest.builder()
+                        .data(responses)
+                        .userId(flightQuery.getUserId())
+                        .build());
+            }
         }
     }
 }
