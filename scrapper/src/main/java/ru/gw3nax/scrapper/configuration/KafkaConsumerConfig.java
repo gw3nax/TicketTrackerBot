@@ -35,43 +35,36 @@ public class KafkaConsumerConfig {
 
     @Bean
     public DefaultKafkaConsumerFactory<String, FlightRequest> kafkaConsumerFactory() {
+        JsonDeserializer<FlightRequest> deserializer = new JsonDeserializer<>(FlightRequest.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
 
-        Map<String, Object> prop = new HashMap<>();
+        Map<String, Object> consumerProps = new HashMap<>();
 
-        prop.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.bootstrapServer());
+        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.bootstrapServer());
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaProperties.groupId());
+        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
+        consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, kafkaProperties.enableAutoCommit());
+        consumerProps.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, kafkaProperties.isolationLevel());
+        consumerProps.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
 
-        prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-
-        prop.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, kafkaProperties.fetchMaxByte());
-        prop.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, kafkaProperties.maxPollRecords());
-        prop.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, kafkaProperties.maxPollInterval());
-
-        prop.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, kafkaProperties.enableAutoCommit());
-
-        prop.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, kafkaProperties.isolationLevel());
-
-        prop.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, List.of(RoundRobinAssignor.class));
-
-        prop.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaProperties.groupId());
-
-        return new DefaultKafkaConsumerFactory<>(
-                prop,
-                new StringDeserializer(),
-                new JsonDeserializer<>(FlightRequest.class)
-        );
+        return new DefaultKafkaConsumerFactory<>(consumerProps, new StringDeserializer(), deserializer);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, FlightRequest> kafkaListener(DefaultKafkaConsumerFactory<String, FlightRequest> kafkaConsumerFactory) {
+    public ConcurrentKafkaListenerContainerFactory<String, FlightRequest> kafkaListener(
+            DefaultKafkaConsumerFactory<String, FlightRequest> kafkaConsumerFactory) {
 
         ConcurrentKafkaListenerContainerFactory<String, FlightRequest> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(kafkaConsumerFactory);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
 
         return factory;
     }
+
 
 }

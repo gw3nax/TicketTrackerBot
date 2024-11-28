@@ -1,16 +1,17 @@
 package ru.gw3nax.scrapper.configuration;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.gw3nax.scrapper.dto.request.BotFlightRequest;
 
@@ -25,12 +26,10 @@ public class KafkaProducerConfig {
     private final KafkaProducerProperties kafkaProperties;
 
     @Bean
-    public NewTopic newTopic() {
-        return TopicBuilder
-                .name(kafkaProperties.topicProp().name())
-                .partitions(kafkaProperties.topicProp().partitions())
-                .replicas(kafkaProperties.topicProp().replicas())
-                .build();
+    public KafkaAdmin kafkaAdmin() {
+        Map<String, Object> configs = new HashMap<>();
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.bootstrapServer());
+        return new KafkaAdmin(configs);
     }
 
     @Bean
@@ -41,7 +40,7 @@ public class KafkaProducerConfig {
 
         prop.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         prop.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
+        prop.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         prop.put(ProducerConfig.BATCH_SIZE_CONFIG, kafkaProperties.batchSize());
         prop.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, kafkaProperties.maxRequestSize());
         prop.put(ProducerConfig.LINGER_MS_CONFIG, kafkaProperties.lingerMs());

@@ -1,6 +1,7 @@
 package ru.gw3nax.scrapper.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.core.convert.converter.Converter;
 import ru.gw3nax.scrapper.configuration.MapperConfiguration;
 import ru.gw3nax.scrapper.dto.request.FlightRequest;

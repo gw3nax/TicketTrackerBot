@@ -8,35 +8,39 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ru.gw3nax.scrapper.dto.response.AviasalesTicketsResponse;
 import ru.gw3nax.scrapper.entity.FlightQuery;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 @Slf4j
 public class AviasalesClient {
-
-    private final String BASE_URL;
-    private final String API_KEY;
     private final RestClient customClient;
 
     public AviasalesClient(
             @Value("${app.aviasalesBaseUrl}") String baseUrl,
-            @Value("${app.aviasalesApiKey}") String apiKey) {
-        this.BASE_URL = baseUrl;
-        this.API_KEY = apiKey;
+            @Value("${app.aviasalesApiKey}") String token) {
 
         this.customClient = RestClient.builder()
-                .baseUrl(UriComponentsBuilder.fromHttpUrl(BASE_URL)
-                        .queryParam("token", API_KEY)
+                .baseUrl(UriComponentsBuilder.fromHttpUrl(baseUrl)
+                        .queryParam("token", token)
                         .toUriString())
                 .build();
     }
 
+    public AviasalesTicketsResponse getTickets(FlightQuery query, String groupBy) {
+        log.info(groupBy.isEmpty() ? "GroupBy is empty" : "GroupBy = " + groupBy);
+        log.info("FlightQuery = " + query.getFromDate());
 
-    public AviasalesTicketsResponse getTickets(FlightQuery query) {
+
+        String formattedDate = query.getFromDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        log.info("Formatted Date = " + formattedDate);
+
         var result = customClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("departure_at", query.getFromDate())
+                        .queryParam("departure_at", formattedDate)
                         .queryParam("origin", query.getFromPlace())
                         .queryParam("destination", query.getToPlace())
                         .queryParam("currency", query.getCurrency())
+                        .queryParam("group_by", groupBy)
                         .build())
                 .retrieve()
                 .body(AviasalesTicketsResponse.class);

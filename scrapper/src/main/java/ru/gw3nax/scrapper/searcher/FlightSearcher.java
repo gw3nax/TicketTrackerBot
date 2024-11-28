@@ -37,7 +37,7 @@ public class FlightSearcher {
                 botService.sendUpdate(BotFlightRequest.builder()
                         .data(responses)
                         .userId(flightQuery.getUserId())
-                        .build());
+                        .build(), flightQuery.getClientTopicName());
             }
         }
     }
