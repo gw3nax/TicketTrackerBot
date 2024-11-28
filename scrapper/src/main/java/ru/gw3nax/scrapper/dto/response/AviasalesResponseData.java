@@ -1,5 +1,7 @@
 package ru.gw3nax.scrapper.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,7 @@ public class AviasalesResponseData {
     private String link;
     private BigDecimal price;
     private Integer transfers;
-    private LocalDate departureAt;
+    @JsonProperty("departure_at")
+    private String departureAt;
     private String airline;
 }
