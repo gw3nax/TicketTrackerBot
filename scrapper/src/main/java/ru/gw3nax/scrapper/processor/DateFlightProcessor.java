@@ -22,14 +22,14 @@ public class DateFlightProcessor extends FlightProcessor {
             return data;
         }
 
-        LocalDate fromDate = query.getFromDate();
-        LocalDate toDate = query.getToDate();
+        var fromDate = query.getFromDate();
+        var toDate = query.getToDate();
 
         log.info("Filtering flights between {} and {}", fromDate, toDate);
 
         List<BotFlightData> filtered = data.stream()
                 .filter(flight -> {
-                    LocalDate flightDate = flight.getDepartureAt();
+                    var flightDate = flight.getDepartureAt();
                     return !flightDate.isBefore(fromDate) && !flightDate.isAfter(toDate);
                 })
                 .collect(Collectors.toList());

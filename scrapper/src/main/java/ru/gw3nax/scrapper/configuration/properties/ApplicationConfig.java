@@ -1,4 +1,4 @@
-package ru.gw3nax.scrapper.configuration;
+package ru.gw3nax.scrapper.configuration.properties;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;

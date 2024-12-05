@@ -3,7 +3,7 @@ app:
   aviasalesApiKey: ${AVIASALES_TOKEN}
   scheduler:
     enable: true
-    interval: 15s
+    interval: 30s
 
 kafka-producer:
   acks: all
@@ -15,6 +15,10 @@ kafka-producer:
     name: responses
     partitions: 1
     replicas: 1
+
+kafka-clients:
+    bot:
+      topic-name: telegram-bot-1-responses
 
 kafka-consumer:
   bootstrap-server: 127.0.0.1:9092

@@ -13,6 +13,7 @@ import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import ru.gw3nax.scrapper.configuration.properties.KafkaProducerProperties;
 import ru.gw3nax.scrapper.dto.request.BotFlightRequest;
 
 import java.util.HashMap;

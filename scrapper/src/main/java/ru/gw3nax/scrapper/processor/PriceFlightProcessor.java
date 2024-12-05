@@ -32,7 +32,7 @@ public class PriceFlightProcessor extends FlightProcessor {
                 })
                 .toList();
 
-        log.info("Filtered flights: {}", filtered);
+        log.info("Filtered flights: {}", filtered.size());
         return filtered;
     }
 }

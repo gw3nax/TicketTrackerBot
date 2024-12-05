@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class FlightRequest {
-    private Action action;
     private String userId;
     private String fromPlace;
     private String toPlace;
