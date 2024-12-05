@@ -2,6 +2,7 @@ package ru.gw3nax.scrapper.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.gw3nax.scrapper.processor.AirlineFlightProcessor;
 import ru.gw3nax.scrapper.processor.DateFlightProcessor;
 import ru.gw3nax.scrapper.processor.FlightProcessor;
 import ru.gw3nax.scrapper.processor.PriceFlightProcessor;
@@ -13,6 +14,6 @@ public class FlightProcessorConfig {
     public FlightProcessor flightProcessor() {
         var priceFlightProcessor = new PriceFlightProcessor(null);
         var dateFlightProcessor = new DateFlightProcessor(priceFlightProcessor);
-        return dateFlightProcessor;
+        return new AirlineFlightProcessor(dateFlightProcessor);
     }
 }

@@ -15,13 +15,9 @@ import ru.gw3nax.scrapper.repository.FlightQueryRepository;
 public class QueryService {
     private final FlightQueryRepository flightQueryRepository;
     private final ConversionService conversionService;
-    private final TopicService topicService;
 
     @Transactional
     public void addSearchQuery(FlightRequest flightRequest, String header) {
-        if (!flightQueryRepository.existsFlightQueryByClientTopicName(header)) {
-            topicService.createNewTopic(header);
-        }
         var flightQuery = conversionService.convert(flightRequest, FlightQuery.class);
         flightQuery.setClientTopicName(header);
         log.info("Flight Query: " + flightQuery.getClientTopicName());
