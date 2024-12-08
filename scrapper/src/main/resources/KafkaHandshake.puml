@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Client -> Kafka: <b>handshake-requests:</b>\n {"topicname": "handshake-temporary-id-request"}
+API -> Kafka:  <b>handshake-requests:</b>\n {"topicname": "handshake-temporary-id-request"}
+API -> API:<b>generate new kafka topic</b>
+API -> Kafka: <b>handshake-temporary-id-request:</b>\n {"topicname": "generated-id-requests"}
+Client -> Kafka: <b>handshake-temporary-id-request:</b>\n {"topicname": "generated-id-requests"}
+Client -> Client: <b>delete "handshake-temporary-id-request" topic</b>
+Client -> Kafka: <b>generated-id-requests:</b>\n flight_query_data
+API -> Kafka: <b>generated-id-requests:</b>\n get flight_query_data
+API -> API: <b>create flight_response_data<b>
+API -> Kafka: <b>generated-id-responses:</b>\n flight_response_data
+Client -> Kafka: <b>generated-id-responses:</b>\n get flight_response_data
+Client -> Client: <b>proccess flight_response_data</b>
+
+
+
+@enduml

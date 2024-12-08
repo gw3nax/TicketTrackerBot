@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij,gradle
 
 .idea
-.env
+src/main/resources/.env
 
 # CMake
 cmake-build-*/

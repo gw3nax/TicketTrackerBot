@@ -1,10 +1,38 @@
 app:
-  scheduler:
-    enable: true
-    interval: 15s
-  botBaseUrl: http://localhost:8090/
   aviasalesBaseUrl: https://api.travelpayouts.com/aviasales/v3/grouped_prices
   aviasalesApiKey: ${AVIASALES_TOKEN}
+  scheduler:
+    enable: true
+    interval: 1h
+
+kafka-producer:
+  acks: all
+  batch-size: 1048576
+  max-request-size: 1048576
+  linger-ms: 5000
+  bootstrap-server:  127.0.0.1:9092
+  topic-prop:
+    name: responses
+    partitions: 1
+    replicas: 1
+
+kafka-clients:
+  clients-props:
+    TicketTrackerBot: telegram-bot-1-responses
+
+
+kafka-consumer:
+  bootstrap-server: 127.0.0.1:9092
+  enable-auto-commit: false
+  fetch-max-byte: 1048576
+  max-poll-records: 5
+  max-poll-interval: 5
+  group-id: listen
+  isolation-level: read_committed
+  topic-prop:
+    name: queries
+    partitions: 1
+    replicas: 1
 
 spring:
   application:
@@ -19,8 +47,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+      format_sql: true
+    show-sql: true
   liquibase:
     change-log: migrations/db.changelog-master.yml
+  kafka:
+    consumer:
+      properties:
+        spring.json.trusted.packages: "ru.gw3nax.scrapper.dto.request,java.util,java.lang,*"
+
+logging:
+  level:
+    org.apache.kafka: OFF
+    org.springframework.kafka: OFF
 
 server:
   port: 8090

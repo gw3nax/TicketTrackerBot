@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.gw3nax.scrapper.command.FlightCommand;
-import ru.gw3nax.scrapper.dto.request.BotFlightResponse;
+import ru.gw3nax.scrapper.dto.request.BotFlightData;
 import ru.gw3nax.scrapper.dto.request.BotFlightRequest;
 import ru.gw3nax.scrapper.entity.FlightQuery;
 import ru.gw3nax.scrapper.processor.FlightProcessor;
@@ -27,21 +27,18 @@ public class FlightSearcher {
 
     public void search() {
         List<FlightQuery> flightQueries = flightQueryRepository.findAll();
-        //Проходится по всем запросам
         for (var flightQuery : flightQueries) {
-            List<BotFlightResponse> flightResponses = new ArrayList<>();
-            //Каждый запрос кидает
+            List<BotFlightData> flightResponses = new ArrayList<>();
             for (var flightCommand : flightCommands) {
-                flightResponses.addAll(Objects.requireNonNull(flightCommand.execute(flightQuery).block()));
+                flightResponses.addAll(Objects.requireNonNull(flightCommand.execute(flightQuery)));
             }
-            List<BotFlightResponse> responses = flightProcessor.process(flightResponses);
-
-            botService.sendTicketSearchResult(BotFlightRequest.builder()
-                    .price(BigDecimal.ONE)
-                    .currency("RUB")
-                    .data(responses)
-                    .chatId(flightQuery.getUser().getChatId())
-                    .build());
+            List<BotFlightData> responses = flightProcessor.process(flightResponses, flightQuery);
+            if (!responses.isEmpty()) {
+                botService.sendUpdate(BotFlightRequest.builder()
+                        .data(responses)
+                        .userId(flightQuery.getUserId())
+                        .build(), flightQuery.getClientTopicName());
+            }
         }
     }
 }
