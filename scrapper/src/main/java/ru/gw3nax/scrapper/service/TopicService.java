@@ -7,7 +7,7 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Service;
-import ru.gw3nax.scrapper.configuration.properties.KafkaClientsProperties;
+import ru.gw3nax.scrapper.configuration.properties.KafkaClientTopicsProperties;
 
 import java.util.Collections;
 
@@ -16,14 +16,15 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class TopicService {
 
-    private final KafkaClientsProperties kafkaClientsProperties;
+    private final KafkaClientTopicsProperties kafkaClientsProperties;
     private final KafkaAdmin kafkaAdmin;
 
     @PostConstruct
     public void init() {
-        log.info("Kafka Clients props is {}", kafkaClientsProperties.clientsProps());
-        if (kafkaClientsProperties.clientsProps()!= null) {
-            for (var topic : kafkaClientsProperties.clientsProps().keySet()) {
+        log.info("Kafka Clients props is {}", kafkaClientsProperties.getClientsProps());
+        var clientProps = kafkaClientsProperties.getClientsProps();
+        if (clientProps != null) {
+            for (var topic : clientProps.values()) {
                 createNewTopic(topic);
             }
         } else {

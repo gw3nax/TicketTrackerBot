@@ -8,6 +8,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ru.gw3nax.scrapper.dto.response.AviasalesTicketsResponse;
 import ru.gw3nax.scrapper.entity.FlightQuery;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -27,13 +30,7 @@ public class AviasalesClient {
     }
 
     public AviasalesTicketsResponse getTickets(FlightQuery query, String groupBy) {
-        log.info(groupBy.isEmpty() ? "GroupBy is empty" : "GroupBy = " + groupBy);
-        log.info("FlightQuery = " + query.getFromDate());
-
-
-        String formattedDate = query.getFromDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-        log.info("Formatted Date = " + formattedDate);
-
+        var formattedDate = query.getFromDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         var result = customClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("departure_at", formattedDate)

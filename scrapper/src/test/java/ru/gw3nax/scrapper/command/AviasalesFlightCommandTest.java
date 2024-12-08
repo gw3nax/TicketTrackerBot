@@ -11,6 +11,7 @@ import ru.gw3nax.scrapper.service.AviasalesService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,37 +32,37 @@ class AviasalesFlightCommandTest {
 
     @Test
     void shouldReturnFlightDataList() {
-        FlightQuery query = FlightQuery.builder()
+        var query = FlightQuery.builder()
                 .fromPlace("LED")
                 .toPlace("SVO")
                 .fromDate(LocalDate.of(2024, 12, 1))
                 .currency("RUB")
                 .build();
 
-        BotFlightData botFlightData = BotFlightData.builder()
+        var botFlightData = BotFlightData.builder()
                 .fromPlace("LED")
                 .toPlace("SVO")
-                .price(new BigDecimal(250.00))
-                .departureAt(LocalDate.of(2024, 12, 1))
+                .price(new BigDecimal("250.00"))
+                .departureAt(LocalDateTime.of(2024, 12, 1, 12,0))
                 .build();
 
         when(aviasalesService.getTickets(query)).thenReturn(List.of(botFlightData));
 
-        List<BotFlightData> result = aviasalesFlightCommand.execute(query);
+        var result = aviasalesFlightCommand.execute(query);
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("LED", result.get(0).getFromPlace());
-        assertEquals("SVO", result.get(0).getToPlace());
-        assertEquals(new BigDecimal(250.00), result.get(0).getPrice());
-        assertEquals(LocalDate.of(2024, 12, 1), result.get(0).getDepartureAt());
+        assertEquals("LED", result.getFirst().getFromPlace());
+        assertEquals("SVO", result.getFirst().getToPlace());
+        assertEquals(new BigDecimal("250.00"), result.getFirst().getPrice());
+        assertEquals(LocalDateTime.of(2024, 12, 1,12,0), result.getFirst().getDepartureAt());
 
         verify(aviasalesService, times(1)).getTickets(query);
     }
 
     @Test
     void shouldHandleEmptyResponse() {
-        FlightQuery query = FlightQuery.builder()
+        var query = FlightQuery.builder()
                 .fromPlace("LED")
                 .toPlace("SVO")
                 .fromDate(LocalDate.of(2024, 12, 1))
@@ -69,7 +70,7 @@ class AviasalesFlightCommandTest {
                 .build();
 
         when(aviasalesService.getTickets(query)).thenReturn(List.of());
-        List<BotFlightData> result = aviasalesFlightCommand.execute(query);
+        var result = aviasalesFlightCommand.execute(query);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

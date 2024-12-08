@@ -9,6 +9,7 @@ import ru.gw3nax.scrapper.dto.request.BotFlightData;
 import ru.gw3nax.scrapper.dto.response.AviasalesResponseData;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Mapper(config = MapperConfiguration.class)
@@ -24,11 +25,11 @@ public interface AviasalesToBotFlightMapper extends Converter<AviasalesResponseD
     BotFlightData convert(AviasalesResponseData aviasalesResponseData);
 
     @Named("mapDepartureAt")
-    default LocalDate mapDepartureAt(String departureAt) {
+    default LocalDateTime mapDepartureAt(String departureAt) {
         if (departureAt == null || departureAt.isEmpty()) {
             return null;
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
-        return LocalDate.parse(departureAt, formatter);
+        return LocalDateTime.parse(departureAt, formatter);
     }
 }

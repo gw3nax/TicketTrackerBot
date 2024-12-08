@@ -30,7 +30,7 @@ public class DateFlightProcessor extends FlightProcessor {
         List<BotFlightData> filtered = data.stream()
                 .filter(flight -> {
                     var flightDate = flight.getDepartureAt();
-                    return !flightDate.isBefore(fromDate) && !flightDate.isAfter(toDate);
+                    return !flightDate.isBefore(fromDate.atStartOfDay()) && !flightDate.isAfter(toDate.atStartOfDay());
                 })
                 .collect(Collectors.toList());
 
