@@ -42,8 +42,5 @@ public interface FlightQueryRepository extends JpaRepository<FlightQuery, Long> 
     )
 """)
     void saveIfNotExist(@Param("flightRequest") FlightQuery flightQuery);
-
-    boolean existsFlightQueryByClientTopicName(String topicName);
-
     Optional<FlightQuery> findFlightQueryByClientTopicNameAndAndUserId(String topicName, String userId);
 }

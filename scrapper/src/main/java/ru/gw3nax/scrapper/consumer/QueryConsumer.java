@@ -1,5 +1,8 @@
 package ru.gw3nax.scrapper.consumer;
 
+import io.github.springwolf.bindings.kafka.annotations.KafkaAsyncOperationBinding;
+import io.github.springwolf.core.asyncapi.annotations.AsyncListener;
+import io.github.springwolf.core.asyncapi.annotations.AsyncOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -25,9 +28,15 @@ public class QueryConsumer {
             dltTopicSuffix = "_dlq",
             include = RuntimeException.class
     )
-
+    @AsyncListener(
+            operation = @AsyncOperation(
+                    channelName = "queries",
+                    description = "More details for the incoming topic"
+            )
+    )
+    @KafkaAsyncOperationBinding
     @KafkaListener(topics = "queries", groupId = "listen", containerFactory = "kafkaListener")
-    public void listen(@Payload FlightRequest flightRequest, @Header("client-name") String header, @Header("action")String actionHeader, Acknowledgment acknowledgment) {
+    public void listen(@Payload FlightRequest flightRequest, @Header("client-name") String header, @Header("action") String actionHeader, Acknowledgment acknowledgment) {
         log.info("Header: " + header);
         var action = Action.fromValue(actionHeader);
         switch (action) {
