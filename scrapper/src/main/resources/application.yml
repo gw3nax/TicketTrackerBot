@@ -11,6 +11,9 @@ kafka-producer:
   max-request-size: 1048576
   linger-ms: 5000
   bootstrap-server:  127.0.0.1:9092
+  credential:
+    username: user
+    password: user_secret
   topic-prop:
     name: responses
     partitions: 1
@@ -31,6 +34,9 @@ kafka-consumer:
   max-poll-interval: 5
   group-id: listen
   isolation-level: read_committed
+  credential:
+    username: user
+    password: user_secret
   topic-prop:
     name: queries
     partitions: 1

@@ -40,7 +40,10 @@ public class KafkaConsumerConfig {
         consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, kafkaProperties.enableAutoCommit());
         consumerProps.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, kafkaProperties.isolationLevel());
         consumerProps.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
-
+        consumerProps.put("security.protocol", "SASL_PLAINTEXT");
+        consumerProps.put("sasl.mechanism", "PLAIN");
+        consumerProps.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required "
+                + "username=\"" + kafkaProperties.credential().username() + "\" password=\"" + kafkaProperties.credential().password()+ "\";");
         return new DefaultKafkaConsumerFactory<>(consumerProps, new StringDeserializer(), deserializer);
     }
 

@@ -22,8 +22,15 @@ public record KafkaConsumerProperties(
         String isolationLevel,
         @NotEmpty
         String groupId,
-        TopicProp topicProp
+        TopicProp topicProp,
+        Credential credential
 ) {
+
+    public record Credential(
+            @NotEmpty String username,
+            @NotEmpty String password
+    ) {
+    }
 
     public record TopicProp(
             @NotEmpty
@@ -33,7 +40,6 @@ public record KafkaConsumerProperties(
             @NotNull
             Integer replicas
     ) {
-
     }
 }
 

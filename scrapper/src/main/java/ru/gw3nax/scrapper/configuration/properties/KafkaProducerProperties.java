@@ -18,7 +18,8 @@ public record KafkaProducerProperties(
         String acks,
         TopicProp topicProp,
         @NotNull
-        String bootstrapServer
+        String bootstrapServer,
+        Credential credential
 ) {
 
     public record TopicProp(
@@ -29,7 +30,11 @@ public record KafkaProducerProperties(
             @NotNull
             Integer replicas
     ) {
-
+    }
+    public record Credential(
+            @NotEmpty String username,
+            @NotEmpty String password
+    ) {
     }
 }
 
