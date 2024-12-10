@@ -49,7 +49,10 @@ public class KafkaProducerConfig {
         prop.put(ProducerConfig.ACKS_CONFIG, kafkaProperties.acks());
 
         prop.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, RoundRobinPartitioner.class);
-
+        prop.put("security.protocol", "SASL_PLAINTEXT");
+        prop.put("sasl.mechanism", "PLAIN");
+        prop.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required "
+                + "username=\"" + kafkaProperties.credential().username() + "\" password=\"" + kafkaProperties.credential().password()+ "\";");
         return new DefaultKafkaProducerFactory<>(prop);
     }
 
