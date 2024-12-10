@@ -3,7 +3,7 @@ app:
   aviasalesApiKey: ${AVIASALES_TOKEN}
   scheduler:
     enable: true
-    interval: 1h
+    interval: 2m
 
 kafka-producer:
   acks: all
@@ -19,7 +19,9 @@ kafka-producer:
 kafka-clients:
   clients-props:
     TicketTrackerBot: telegram-bot-1-responses
-
+    TicketTrackerWebSite: website-client-1-responses
+test:
+  kafka-bootstrap-server: 127.0.0.1:9092
 
 kafka-consumer:
   bootstrap-server: 127.0.0.1:9092
@@ -52,9 +54,23 @@ spring:
   liquibase:
     change-log: migrations/db.changelog-master.yml
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
       properties:
         spring.json.trusted.packages: "ru.gw3nax.scrapper.dto.request,java.util,java.lang,*"
+
+springwolf:
+  docket:
+    base-package: ru.gw3nax.scrapper
+    info:
+      title: ${spring.application.name}
+      version: 1.0.0
+      description: TicketTrackerAPI AsyncAPI documentation
+    servers:
+      kafka-server:
+        protocol: kafka
+        host: ${spring.kafka.bootstrap-servers}
+
 
 logging:
   level:

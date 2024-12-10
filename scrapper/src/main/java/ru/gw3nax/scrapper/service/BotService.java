@@ -15,6 +15,7 @@ public class BotService {
     private final KafkaClientTopicsProperties kafkaClientsProperties;
 
     public void sendUpdate(BotFlightRequest botFlightRequest, String clientName) {
+        log.info("Sending message to {}", clientName);
         var topicName = kafkaClientsProperties.getClientsProps().get(clientName);
         log.info("Topic name: {}", topicName);
         flightResponseProducer.sendUpdate(botFlightRequest, topicName);
