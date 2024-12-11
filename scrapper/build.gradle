@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'jacoco'
 }
 
 group = 'ru.gw3nax'
@@ -25,18 +26,95 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    //kafka
+    implementation 'org.springframework.kafka:spring-kafka:3.2.4'
+    //validation
+    implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+
+    //db
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.4'
     implementation 'org.postgresql:postgresql:42.7.4'
 
+    //utils
+    implementation 'me.paulschwarz:spring-dotenv:3.0.0'
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // Springwolf Core
+    implementation 'io.github.springwolf:springwolf-core:1.9.0'
+    implementation 'io.github.springwolf:springwolf-kafka:1.9.0'
+    implementation 'io.github.springwolf:springwolf-ui:1.9.0'
+
+    //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testImplementation 'org.springframework.kafka:spring-kafka-test:3.2.4'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:kafka'
+    testImplementation 'org.awaitility:awaitility'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.70
+            }
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                        "ru/gw3nax/scrapper/configuration/*",
+                        "ru/gw3nax/scrapper/dto/*",
+                        "ru/gw3nax/scrapper/entity/*",
+                        "ru/gw3nax/scrapper/mapper/*",
+                        "ru/gw3nax/scrapper/exception/*",
+
+                ])
+            }))
+        }
+    }
+}
+
+
+tasks.jacocoTestReport {
+    dependsOn tasks.test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "ru/gw3nax/scrapper/configuration/*",
+                    "ru/gw3nax/scrapper/dto/*",
+                    "ru/gw3nax/scrapper/entity/*",
+                    "ru/gw3nax/scrapper/mapper/*",
+                    "ru/gw3nax/scrapper/exception/*"
+            ])
+        }))
+    }
 }

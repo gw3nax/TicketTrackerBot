@@ -1,3 +1,45 @@
+app:
+  aviasalesBaseUrl: https://api.travelpayouts.com/aviasales/v3/grouped_prices
+  aviasalesApiKey: ${AVIASALES_TOKEN}
+  scheduler:
+    enable: true
+    interval: 15s
+
+kafka-producer:
+  acks: all
+  batch-size: 1048576
+  max-request-size: 1048576
+  linger-ms: 5000
+  bootstrap-server:  127.0.0.1:9092
+  credential:
+    username: admin
+    password: admin-secret
+  topic-prop:
+    name: responses
+    partitions: 1
+    replicas: 1
+
+kafka-clients:
+  clients-props:
+    TicketTrackerBot: telegram-bot-1-responses
+    TicketTrackerWebSite: website-client-1-responses
+
+kafka-consumer:
+  bootstrap-server: 127.0.0.1:9092
+  enable-auto-commit: false
+  fetch-max-byte: 1048576
+  max-poll-records: 5
+  max-poll-interval: 5
+  group-id: listen
+  isolation-level: read_committed
+  credential:
+    username: admin
+    password: admin-secret
+  topic-prop:
+    name: queries
+    partitions: 1
+    replicas: 1
+
 spring:
   application:
     name: scrapper
@@ -11,7 +53,33 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+      format_sql: true
+    show-sql: true
   liquibase:
     change-log: migrations/db.changelog-master.yml
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      properties:
+        spring.json.trusted.packages: "ru.gw3nax.scrapper.dto.request,java.util,java.lang,*"
+
+springwolf:
+  docket:
+    base-package: ru.gw3nax.scrapper
+    info:
+      title: ${spring.application.name}
+      version: 1.0.0
+      description: TicketTrackerAPI AsyncAPI documentation
+    servers:
+      kafka-server:
+        protocol: kafka
+        host: ${spring.kafka.bootstrap-servers}
+
+
+logging:
+  level:
+    org.apache.kafka: OFF
+    org.springframework.kafka: OFF
+
 server:
   port: 8090
