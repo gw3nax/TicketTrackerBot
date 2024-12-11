@@ -10,6 +10,7 @@ import ru.gw3nax.scrapper.entity.FlightQuery;
 import ru.gw3nax.scrapper.processor.FlightProcessor;
 import ru.gw3nax.scrapper.repository.FlightQueryRepository;
 import ru.gw3nax.scrapper.service.BotService;
+import ru.gw3nax.scrapper.service.UserService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class FlightSearcher {
     private final BotService botService;
     private final List<FlightCommand> flightCommands;
     private final FlightProcessor flightProcessor;
+    private final UserService userService;
 
     public void search() {
         List<FlightQuery> flightQueries = flightQueryRepository.findAll();
@@ -36,8 +38,8 @@ public class FlightSearcher {
             if (!responses.isEmpty()) {
                 botService.sendUpdate(BotFlightRequest.builder()
                         .data(responses)
-                        .userId(flightQuery.getUserId())
-                        .build(), flightQuery.getClientTopicName());
+                        .userId(flightQuery.getUser().getUserId())
+                        .build(), userService.getClientTopicName(flightQuery.getUser().getUserId()));
             }
         }
     }

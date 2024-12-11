@@ -9,12 +9,13 @@ import ru.gw3nax.scrapper.command.FlightCommand;
 import ru.gw3nax.scrapper.dto.request.BotFlightData;
 import ru.gw3nax.scrapper.dto.request.BotFlightRequest;
 import ru.gw3nax.scrapper.entity.FlightQuery;
+import ru.gw3nax.scrapper.entity.UserEntity;
 import ru.gw3nax.scrapper.processor.FlightProcessor;
 import ru.gw3nax.scrapper.repository.FlightQueryRepository;
 import ru.gw3nax.scrapper.service.BotService;
+import ru.gw3nax.scrapper.service.UserService;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,9 @@ class FlightSearcherTest {
     @Mock
     private FlightProcessor flightProcessor;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private FlightSearcher flightSearcher;
 
@@ -45,27 +49,34 @@ class FlightSearcherTest {
 
     @Test
     void testSearchWithResults() {
-        FlightQuery query = FlightQuery.builder()
+        UserEntity user = UserEntity.builder()
                 .userId("user123")
-                .clientTopicName("topic123")
+                .clientName("topic123")
+                .build();
+
+        FlightQuery query = FlightQuery.builder()
+                .user(user)
                 .fromPlace("LED")
                 .toPlace("SVO")
                 .currency("USD")
                 .price(BigDecimal.valueOf(5000))
                 .build();
 
-        BotFlightData flightData = new BotFlightData("LED", "SVO", LocalDateTime.of(2024, 12, 12, 12, 0), BigDecimal.valueOf(4500), "SU", "/example-link");
+        BotFlightData flightData = new BotFlightData("LED", "SVO",
+                LocalDateTime.of(2024, 12, 12, 12, 0),
+                BigDecimal.valueOf(4500), "SU", "/example-link");
 
         when(flightQueryRepository.findAll()).thenReturn(List.of(query));
+        when(userService.getClientTopicName("user123")).thenReturn("topic123");
         FlightCommand command = mock(FlightCommand.class);
         when(command.execute(query)).thenReturn(List.of(flightData));
         when(flightCommands.iterator()).thenReturn(Collections.singletonList(command).iterator());
-
         when(flightProcessor.process(List.of(flightData), query)).thenReturn(List.of(flightData));
 
         flightSearcher.search();
 
         verify(flightQueryRepository, times(1)).findAll();
+        verify(userService, times(1)).getClientTopicName("user123");
         verify(command, times(1)).execute(query);
         verify(flightProcessor, times(1)).process(List.of(flightData), query);
         verify(botService, times(1)).sendUpdate(
@@ -76,6 +87,7 @@ class FlightSearcherTest {
                 "topic123"
         );
     }
+
 
     @Test
     void testSearchWithoutResults() {

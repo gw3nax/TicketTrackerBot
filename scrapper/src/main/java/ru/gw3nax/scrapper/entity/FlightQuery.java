@@ -18,8 +18,9 @@ public class FlightQuery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String clientTopicName;
-    private String userId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private UserEntity user;
     private String fromPlace;
     private String toPlace;
     private LocalDate fromDate;

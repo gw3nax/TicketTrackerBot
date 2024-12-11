@@ -31,8 +31,6 @@ dependencies {
 
     //kafka
     implementation 'org.springframework.kafka:spring-kafka:3.2.4'
-    implementation 'org.apache.kafka:kafka-clients:3.9.0'
-
     //validation
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
@@ -62,7 +60,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test:3.2.4'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:kafka'
     testImplementation 'org.awaitility:awaitility'
