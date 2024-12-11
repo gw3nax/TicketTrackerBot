@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.gw3nax.scrapper.entity.UserEntity;
 
+
 import java.util.Optional;
 
 @Repository

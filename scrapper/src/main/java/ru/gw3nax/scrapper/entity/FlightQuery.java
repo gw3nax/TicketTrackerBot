@@ -2,7 +2,6 @@ package ru.gw3nax.scrapper.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -11,12 +10,12 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name = "flight_queries")
 public class FlightQuery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)

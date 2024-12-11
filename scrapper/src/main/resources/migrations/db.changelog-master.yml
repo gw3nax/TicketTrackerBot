@@ -2,4 +2,12 @@ databaseChangeLog:
   - include:
       file: migrations/changelog/V1__create_table_users.sql
   - include:
+<<<<<<< HEAD
       file: migrations/changelog/V1__create_table_flight_queries.sql
+=======
+      file: migrations/changelog/V1__create_table_flight_queries.sql
+  - include:
+      file: migrations/changelog/V1__create_table_flight_responses.sql
+  - include:
+      file: migrations/changelog/V1__create_table_flights.sql
+>>>>>>> main

@@ -76,10 +76,10 @@ springwolf:
         host: ${spring.kafka.bootstrap-servers}
 
 
-#logging:
-#  level:
-#    org.apache.kafka: OFF
-#    org.springframework.kafka: OFF
+logging:
+  level:
+    org.apache.kafka: OFF
+    org.springframework.kafka: OFF
 
 server:
   port: 8090
