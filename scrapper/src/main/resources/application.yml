@@ -3,7 +3,7 @@ app:
   aviasalesApiKey: ${AVIASALES_TOKEN}
   scheduler:
     enable: true
-    interval: 2m
+    interval: 15s
 
 kafka-producer:
   acks: all
@@ -12,8 +12,8 @@ kafka-producer:
   linger-ms: 5000
   bootstrap-server:  127.0.0.1:9092
   credential:
-    username: user
-    password: user_secret
+    username: admin
+    password: admin-secret
   topic-prop:
     name: responses
     partitions: 1
@@ -23,8 +23,6 @@ kafka-clients:
   clients-props:
     TicketTrackerBot: telegram-bot-1-responses
     TicketTrackerWebSite: website-client-1-responses
-test:
-  kafka-bootstrap-server: 127.0.0.1:9092
 
 kafka-consumer:
   bootstrap-server: 127.0.0.1:9092
@@ -35,8 +33,8 @@ kafka-consumer:
   group-id: listen
   isolation-level: read_committed
   credential:
-    username: user
-    password: user_secret
+    username: admin
+    password: admin-secret
   topic-prop:
     name: queries
     partitions: 1
@@ -78,10 +76,10 @@ springwolf:
         host: ${spring.kafka.bootstrap-servers}
 
 
-logging:
-  level:
-    org.apache.kafka: OFF
-    org.springframework.kafka: OFF
+#logging:
+#  level:
+#    org.apache.kafka: OFF
+#    org.springframework.kafka: OFF
 
 server:
   port: 8090

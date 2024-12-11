@@ -15,26 +15,27 @@ import ru.gw3nax.scrapper.repository.FlightQueryRepository;
 public class QueryService {
     private final FlightQueryRepository flightQueryRepository;
     private final ConversionService conversionService;
+    private final UserService userService;
 
     @Transactional
     public void addSearchQuery(FlightRequest flightRequest, String header) {
         var flightQuery = conversionService.convert(flightRequest, FlightQuery.class);
-        flightQuery.setClientTopicName(header);
-        log.info("Flight Query: " + flightQuery.getClientTopicName());
+        var user = userService.registerUser(flightRequest.getUserId(), header);
+        flightQuery.setUser(user);
         flightQueryRepository.saveIfNotExist(flightQuery);
     }
 
     @Transactional
-    public void deleteSearchQuery(FlightRequest flightRequest, String header) {
-        flightQueryRepository.deleteFlightQueryByFlightRequestAndHeader(flightRequest, header);
+    public void deleteSearchQuery(FlightRequest flightRequest) {
+        log.info("Delete flight query: {}", flightRequest);
+        flightQueryRepository.deleteFlightQueryByUserId(userService.findUserByUserId(flightRequest.getUserId()));
     }
 
     @Transactional
-    public void updateSearchQuery(FlightRequest flightRequest, String header) {
-        var flightQuery = flightQueryRepository.findFlightQueryByClientTopicNameAndAndUserId(header, flightRequest.getUserId());
+    public void updateSearchQuery(FlightRequest flightRequest) {
+        var flightQuery = flightQueryRepository.findFlightQueryByUserId(userService.findUserByUserId(flightRequest.getUserId()));
         if (flightQuery.isPresent()) {
             var updateFlightQuery = conversionService.convert(flightRequest, FlightQuery.class);
-            updateFlightQuery.setClientTopicName(header);
             updateFlightQuery.setId(flightQuery.get().getId());
             flightQueryRepository.save(updateFlightQuery);
         }

@@ -5,42 +5,35 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.gw3nax.scrapper.dto.request.FlightRequest;
+import org.springframework.transaction.annotation.Transactional;
 import ru.gw3nax.scrapper.entity.FlightQuery;
 
 import java.util.Optional;
 
 @Repository
 public interface FlightQueryRepository extends JpaRepository<FlightQuery, Long> {
-    @Modifying
-    @Query("DELETE FROM FlightQuery f WHERE f.userId = :#{#flightRequest.userId} " +
-            "AND f.fromPlace = :#{#flightRequest.fromPlace} " +
-            "AND f.toPlace = :#{#flightRequest.toPlace} " +
-            "AND f.fromDate = :#{#flightRequest.fromDate} " +
-            "AND f.toDate = :#{#flightRequest.toDate} " +
-            "AND f.currency = :#{#flightRequest.currency} " +
-            "AND f.price = :#{#flightRequest.price} " +
-            "AND f.clientTopicName = :#{#header}")
-    void deleteFlightQueryByFlightRequestAndHeader(@Param("flightRequest") FlightRequest flightRequest, @Param("header") String header);
+
+    void deleteFlightQueryByUserId(Long userId);
 
     @Modifying
+    @Transactional
     @Query("""
-    INSERT INTO FlightQuery (userId, fromPlace, toPlace, fromDate, toDate, currency, price, clientTopicName)
-    SELECT :#{#flightRequest.userId}, :#{#flightRequest.fromPlace}, 
-           :#{#flightRequest.toPlace}, :#{#flightRequest.fromDate}, :#{#flightRequest.toDate}, 
-           :#{#flightRequest.currency}, :#{#flightRequest.price}, :#{#flightRequest.clientTopicName}
-    WHERE NOT EXISTS (
-        SELECT 1 FROM FlightQuery f 
-        WHERE f.userId = :#{#flightRequest.userId} 
-          AND f.fromPlace = :#{#flightRequest.fromPlace} 
-          AND f.toPlace = :#{#flightRequest.toPlace} 
-          AND f.fromDate = :#{#flightRequest.fromDate} 
-          AND f.toDate = :#{#flightRequest.toDate} 
-          AND f.currency = :#{#flightRequest.currency} 
-          AND f.price = :#{#flightRequest.price}
-          AND f.clientTopicName = :#{#flightRequest.clientTopicName}
-    )
-""")
-    void saveIfNotExist(@Param("flightRequest") FlightQuery flightQuery);
-    Optional<FlightQuery> findFlightQueryByClientTopicNameAndAndUserId(String topicName, String userId);
+        INSERT INTO FlightQuery (user, fromPlace, toPlace, fromDate, toDate, currency, price)
+        SELECT :#{#flightQuery.user}, :#{#flightQuery.fromPlace}, :#{#flightQuery.toPlace}, 
+               :#{#flightQuery.fromDate}, :#{#flightQuery.toDate}, :#{#flightQuery.currency}, 
+               :#{#flightQuery.price}
+        WHERE NOT EXISTS (
+            SELECT 1 FROM FlightQuery f 
+            WHERE f.user.id = :#{#flightQuery.user.id}
+              AND f.fromPlace = :#{#flightQuery.fromPlace}
+              AND f.toPlace = :#{#flightQuery.toPlace}
+              AND f.fromDate = :#{#flightQuery.fromDate}
+              AND f.toDate = :#{#flightQuery.toDate}
+              AND f.currency = :#{#flightQuery.currency}
+              AND f.price = :#{#flightQuery.price}
+        )
+        """)
+    void saveIfNotExist(@Param("flightQuery") FlightQuery flightQuery);
+
+    Optional<FlightQuery> findFlightQueryByUserId(Long userId);
 }

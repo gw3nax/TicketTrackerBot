@@ -30,6 +30,12 @@ public class KafkaProducerConfig {
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.bootstrapServer());
+        configs.put("security.protocol", "SASL_PLAINTEXT");
+        configs.put("sasl.mechanism", "PLAIN");
+        configs.put("sasl.jaas.config", String.format(
+                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";",
+                kafkaProperties.credential().username().trim(),
+                kafkaProperties.credential().password().trim()));
         return new KafkaAdmin(configs);
     }
 
@@ -51,8 +57,10 @@ public class KafkaProducerConfig {
         prop.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, RoundRobinPartitioner.class);
         prop.put("security.protocol", "SASL_PLAINTEXT");
         prop.put("sasl.mechanism", "PLAIN");
-        prop.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required "
-                + "username=\"" + kafkaProperties.credential().username() + "\" password=\"" + kafkaProperties.credential().password()+ "\";");
+        prop.put("sasl.jaas.config", String.format(
+                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";",
+                kafkaProperties.credential().username().trim(),
+                kafkaProperties.credential().password().trim()));
         return new DefaultKafkaProducerFactory<>(prop);
     }
 

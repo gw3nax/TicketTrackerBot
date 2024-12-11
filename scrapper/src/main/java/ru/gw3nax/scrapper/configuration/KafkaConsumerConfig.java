@@ -1,6 +1,7 @@
 package ru.gw3nax.scrapper.configuration;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
+@Slf4j
 @RequiredArgsConstructor
 public class KafkaConsumerConfig {
 
@@ -42,8 +44,10 @@ public class KafkaConsumerConfig {
         consumerProps.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
         consumerProps.put("security.protocol", "SASL_PLAINTEXT");
         consumerProps.put("sasl.mechanism", "PLAIN");
-        consumerProps.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required "
-                + "username=\"" + kafkaProperties.credential().username() + "\" password=\"" + kafkaProperties.credential().password()+ "\";");
+        consumerProps.put("sasl.jaas.config", String.format(
+                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";",
+                kafkaProperties.credential().username().trim(),
+                kafkaProperties.credential().password().trim()));
         return new DefaultKafkaConsumerFactory<>(consumerProps, new StringDeserializer(), deserializer);
     }
 
