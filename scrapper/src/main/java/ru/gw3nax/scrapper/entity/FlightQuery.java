@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "flight_queries")
 public class FlightQuery {
 

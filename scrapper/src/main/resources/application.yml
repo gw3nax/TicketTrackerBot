@@ -3,14 +3,14 @@ app:
   aviasalesApiKey: ${AVIASALES_TOKEN}
   scheduler:
     enable: true
-    interval: 15s
+    interval: 3m
 
 kafka-producer:
   acks: all
   batch-size: 1048576
   max-request-size: 1048576
   linger-ms: 5000
-  bootstrap-server:  127.0.0.1:9092
+  bootstrap-server:  host.docker.internal:9092
   credential:
     username: admin
     password: admin-secret
@@ -25,7 +25,7 @@ kafka-clients:
     TicketTrackerWebSite: website-client-1-responses
 
 kafka-consumer:
-  bootstrap-server: 127.0.0.1:9092
+  bootstrap-server: host.docker.internal:9092
   enable-auto-commit: false
   fetch-max-byte: 1048576
   max-poll-records: 5
@@ -58,7 +58,7 @@ spring:
   liquibase:
     change-log: migrations/db.changelog-master.yml
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: host.docker.internal:9092
     consumer:
       properties:
         spring.json.trusted.packages: "ru.gw3nax.scrapper.dto.request,java.util,java.lang,*"
@@ -76,10 +76,10 @@ springwolf:
         host: ${spring.kafka.bootstrap-servers}
 
 
-logging:
-  level:
-    org.apache.kafka: OFF
-    org.springframework.kafka: OFF
+#logging:
+#  level:
+#    org.apache.kafka: OFF
+#    org.springframework.kafka: OFF
 
 server:
   port: 8090

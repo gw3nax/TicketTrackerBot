@@ -65,7 +65,7 @@ class AviasalesClientTest {
                 .addHeader("Content-Type", "application/json")
                 .setResponseCode(200));
 
-        FlightQuery query = FlightQuery.builder()
+        var query = FlightQuery.builder()
                 .fromPlace("LED")
                 .toPlace("SVO")
                 .fromDate(LocalDate.of(2024,12,12))
