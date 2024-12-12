@@ -13,7 +13,7 @@ import lombok.*;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String userId;
-    String clientName;
+    private Long id;
+    private String userId;
+    private String clientName;
 }

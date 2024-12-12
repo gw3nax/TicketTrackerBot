@@ -15,6 +15,7 @@ public class UserService {
     }
 
     public UserEntity registerUser(String userId, String header) {
+        if (userRepository.findByUserId(userId).isPresent()) return userRepository.findByUserId(userId).get();
         var userEntity = UserEntity.builder()
                 .clientName(header)
                 .userId(userId)
